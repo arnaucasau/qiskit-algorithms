@@ -21,7 +21,6 @@ concurrency:
 
 jobs:
   docs_publish:
-    if: ${{ startsWith(github.ref, 'refs/heads/stable') && contains('["mtreinish","Cryoris","ElePT","woodsp-ibm"]', github.actor) }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
