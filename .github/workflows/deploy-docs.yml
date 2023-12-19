@@ -21,7 +21,6 @@ concurrency:
 
 jobs:
   docs_publish:
-    if: ${{ startsWith(github.ref, 'refs/heads/stable') && contains('["mtreinish","Cryoris","ElePT","woodsp-ibm"]', github.actor) }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -42,7 +41,7 @@ jobs:
           pip install jupyter qiskit[visualization]
           sudo apt-get install -y pandoc graphviz
         shell: bash
-      - name: Build and publish
+      - name: Build docs
         env:
           encrypted_rclone_key: ${{ secrets.encrypted_rclone_key }}
           encrypted_rclone_iv: ${{ secrets.encrypted_rclone_iv }}
@@ -52,5 +51,10 @@ jobs:
           echo "earliest_version: 0.1.0" >> releasenotes/config.yaml
           tools/ignore_untagged_notes.sh
           make html
-          tools/deploy_documentation.sh
         shell: bash
+      - name: Bypass Jekyll Processing # Necessary for setting the correct css path
+        run: touch docs/build/html/.nojekyll
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: docs/build/html/
