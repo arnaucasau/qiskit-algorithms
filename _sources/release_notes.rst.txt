@@ -1,0 +1,6 @@
+.. release-notes:: Release Notes
+   :ignore-notes:
+     releasenotes/notes/fix-fidelity-00fbfa9919e860de.yaml,
+     releasenotes/notes/fix_fidelity_cache-3a4cc328344716e0.yaml,
+     releasenotes/notes/fix_gsls_bounds-29d4a7506130cd69.yaml,
+     releasenotes/notes/py_3_12_support-13aa1a32494d25e7.yaml,

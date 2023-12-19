@@ -1,0 +1,1269 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Variational Quantum Time Evolution" href="11_VarQTE.html" /><link rel="prev" title="Grover’s algorithm examples" href="07_grover_examples.html" />
+
+    <!-- Generated with Sphinx 7.1.2 and Furo 2023.08.19 -->
+        <title>Projected Variational Quantum Dynamics - Qiskit Algorithms 0.3.0</title>
+      <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=135e06be" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=82a976d7" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/qiskit-sphinx-theme.css?v=fe84956c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/qiskit-ecosystem.css?v=745c5aa7" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=36a5483c" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-gallery.css" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #ffffff;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style><link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<script src="../_static/js/web-components/top-nav-bar.js"></script></head>
+  <body>
+    
+    <script>document.body.dataset.theme = "light";</script>
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg id="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+      <defs><style>.cls-1{fill:none;}</style></defs>
+      <path d="M28,4H4A2,2,0,0,0,2,6V26a2,2,0,0,0,2,2H28a2,2,0,0,0,2-2V6A2,2,0,0,0,28,4ZM4,6H20V26H4ZM28,26H22V6h6Z"/>
+      <rect id="_Transparent_Rectangle_" data-name="&lt;Transparent Rectangle&gt;" class="cls-1" width="32" height="32"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg id="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+      <defs><style>.cls-1{fill:none;}</style></defs>
+      <rect x="4" y="6" width="24" height="2"/>
+      <rect x="4" y="24" width="24" height="2"/>
+      <rect x="4" y="12" width="24" height="2"/>
+      <rect x="4" y="18" width="24" height="2"/>
+      <rect id="_Transparent_Rectangle_" data-name="&lt;Transparent Rectangle&gt;" class="cls-1" width="32" height="32"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg version="1.1" id="icon" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+         viewBox="0 0 32 32" style="enable-background:new 0 0 32 32;" xml:space="preserve"><polygon points="22,16 12,26 10.6,24.6 19.2,16 10.6,7.4 12,6 " stroke="currentColor"/>
+      <rect id="_x3C_Transparent_Rectangle_x3E_" fill="none" width="32" height="32"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-new-tab" viewBox="0 0 32 32">
+    <svg id="icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+      <defs>
+        <style>
+          .cls-1 {
+            fill: none;
+          }
+        </style>
+      </defs>
+      <path fill="#6929C4" d="M26,28H6a2.0027,2.0027,0,0,1-2-2V6A2.0027,2.0027,0,0,1,6,4H16V6H6V26H26V16h2V26A2.0027,2.0027,0,0,1,26,28Z"/>
+      <polygon fill="#6929C4" points="20 2 20 4 26.586 4 18 12.586 19.414 14 28 5.414 28 12 30 12 30 2 20 2"/>
+      <rect id="_Transparent_Rectangle_" data-name="&lt;Transparent Rectangle&gt;" class="cls-1" width="32" height="32"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">Qiskit Algorithms 0.3.0</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><div class="sidebar-brand">
+  <a href="https://www.qiskit.org/ecosystem">
+    <div class="sidebar-logo-container">
+      <img class="sidebar-logo" src="../_static/images/ecosystem-logo.svg" alt="Qiskit Ecosystem logo"/>
+    </div>
+  </a>
+  
+  <span class="sidebar-brand-text">Qiskit Algorithms 0.3.0</span>
+</div><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../apidocs/qiskit_algorithms.html">API References</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of API References</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.AmplificationProblem.html">AmplificationProblem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.AmplitudeAmplifier.html">AmplitudeAmplifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.Grover.html">Grover</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.GroverResult.html">GroverResult</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.AmplitudeEstimator.html">AmplitudeEstimator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.AmplitudeEstimatorResult.html">AmplitudeEstimatorResult</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.AmplitudeEstimation.html">AmplitudeEstimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.AmplitudeEstimationResult.html">AmplitudeEstimationResult</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.EstimationProblem.html">EstimationProblem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.FasterAmplitudeEstimation.html">FasterAmplitudeEstimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.FasterAmplitudeEstimationResult.html">FasterAmplitudeEstimationResult</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.IterativeAmplitudeEstimation.html">IterativeAmplitudeEstimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.IterativeAmplitudeEstimationResult.html">IterativeAmplitudeEstimationResult</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.MaximumLikelihoodAmplitudeEstimation.html">MaximumLikelihoodAmplitudeEstimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.MaximumLikelihoodAmplitudeEstimationResult.html">MaximumLikelihoodAmplitudeEstimationResult</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.Eigensolver.html">Eigensolver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.EigensolverResult.html">EigensolverResult</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.NumPyEigensolver.html">NumPyEigensolver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.NumPyEigensolverResult.html">NumPyEigensolverResult</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.VQD.html">VQD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.VQDResult.html">VQDResult</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../apidocs/qiskit_algorithms.gradients.html">Gradients (<code class="xref py py-mod docutils literal notranslate"><span class="pre">qiskit_algorithms.gradients</span></code>)</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Gradients (qiskit_algorithms.gradients)</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.gradients.BaseEstimatorGradient.html">BaseEstimatorGradient</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.gradients.BaseQGT.html">BaseQGT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.gradients.BaseSamplerGradient.html">BaseSamplerGradient</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.gradients.EstimatorGradientResult.html">EstimatorGradientResult</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.gradients.SamplerGradientResult.html">SamplerGradientResult</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.gradients.QGTResult.html">QGTResult</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.gradients.FiniteDiffEstimatorGradient.html">FiniteDiffEstimatorGradient</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.gradients.FiniteDiffSamplerGradient.html">FiniteDiffSamplerGradient</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.gradients.LinCombEstimatorGradient.html">LinCombEstimatorGradient</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.gradients.LinCombSamplerGradient.html">LinCombSamplerGradient</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.gradients.LinCombQGT.html">LinCombQGT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.gradients.ParamShiftEstimatorGradient.html">ParamShiftEstimatorGradient</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.gradients.ParamShiftSamplerGradient.html">ParamShiftSamplerGradient</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.gradients.QFIResult.html">QFIResult</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.gradients.QFI.html">QFI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.gradients.ReverseEstimatorGradient.html">ReverseEstimatorGradient</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.gradients.ReverseQGT.html">ReverseQGT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.gradients.SPSAEstimatorGradient.html">SPSAEstimatorGradient</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.gradients.SPSASamplerGradient.html">SPSASamplerGradient</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.MinimumEigensolver.html">MinimumEigensolver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.MinimumEigensolverResult.html">MinimumEigensolverResult</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.NumPyMinimumEigensolver.html">NumPyMinimumEigensolver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.NumPyMinimumEigensolverResult.html">NumPyMinimumEigensolverResult</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.VQE.html">VQE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.VQEResult.html">VQEResult</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.AdaptVQE.html">AdaptVQE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.AdaptVQEResult.html">AdaptVQEResult</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.SamplingMinimumEigensolver.html">SamplingMinimumEigensolver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.SamplingMinimumEigensolverResult.html">SamplingMinimumEigensolverResult</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.SamplingVQE.html">SamplingVQE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.SamplingVQEResult.html">SamplingVQEResult</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.QAOA.html">QAOA</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../apidocs/qiskit_algorithms.optimizers.html">Optimizers (<code class="xref py py-mod docutils literal notranslate"><span class="pre">qiskit_algorithms.optimizers</span></code>)</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Optimizers (qiskit_algorithms.optimizers)</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.optimizers.OptimizerResult.html">OptimizerResult</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.optimizers.Optimizer.html">Optimizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.optimizers.Minimizer.html">Minimizer</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../stubs/qiskit_algorithms.optimizers.optimizer_utils.html">qiskit_algorithms.optimizers.optimizer_utils</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of qiskit_algorithms.optimizers.optimizer_utils</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../stubs/qiskit_algorithms.optimizers.optimizer_utils.LearningRate.html">LearningRate</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.optimizers.SteppableOptimizer.html">SteppableOptimizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.optimizers.AskData.html">AskData</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.optimizers.TellData.html">TellData</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.optimizers.OptimizerState.html">OptimizerState</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.optimizers.ADAM.html">ADAM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.optimizers.AQGD.html">AQGD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.optimizers.CG.html">CG</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.optimizers.COBYLA.html">COBYLA</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.optimizers.L_BFGS_B.html">L_BFGS_B</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.optimizers.GSLS.html">GSLS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.optimizers.GradientDescent.html">GradientDescent</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.optimizers.GradientDescentState.html">GradientDescentState</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.optimizers.NELDER_MEAD.html">NELDER_MEAD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.optimizers.NFT.html">NFT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.optimizers.P_BFGS.html">P_BFGS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.optimizers.POWELL.html">POWELL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.optimizers.SLSQP.html">SLSQP</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.optimizers.SPSA.html">SPSA</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.optimizers.QNSPSA.html">QNSPSA</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.optimizers.TNC.html">TNC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.optimizers.SciPyOptimizer.html">SciPyOptimizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.optimizers.UMDA.html">UMDA</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.optimizers.BOBYQA.html">BOBYQA</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.optimizers.IMFIL.html">IMFIL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.optimizers.SNOBFIT.html">SNOBFIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.optimizers.CRS.html">CRS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.optimizers.DIRECT_L.html">DIRECT_L</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.optimizers.DIRECT_L_RAND.html">DIRECT_L_RAND</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.optimizers.ESCH.html">ESCH</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.optimizers.ISRES.html">ISRES</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.HamiltonianPhaseEstimation.html">HamiltonianPhaseEstimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.HamiltonianPhaseEstimationResult.html">HamiltonianPhaseEstimationResult</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.PhaseEstimationScale.html">PhaseEstimationScale</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.PhaseEstimation.html">PhaseEstimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.PhaseEstimationResult.html">PhaseEstimationResult</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.IterativePhaseEstimation.html">IterativePhaseEstimation</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../apidocs/qiskit_algorithms.state_fidelities.html">State Fidelities (<code class="xref py py-mod docutils literal notranslate"><span class="pre">qiskit_algorithms.state_fidelities</span></code>)</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of State Fidelities (qiskit_algorithms.state_fidelities)</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.state_fidelities.BaseStateFidelity.html">BaseStateFidelity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.state_fidelities.ComputeUncompute.html">ComputeUncompute</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.state_fidelities.StateFidelityResult.html">StateFidelityResult</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.RealTimeEvolver.html">RealTimeEvolver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.ImaginaryTimeEvolver.html">ImaginaryTimeEvolver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.TimeEvolutionResult.html">TimeEvolutionResult</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.TimeEvolutionProblem.html">TimeEvolutionProblem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.PVQD.html">PVQD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.PVQDResult.html">PVQDResult</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.SciPyImaginaryEvolver.html">SciPyImaginaryEvolver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.SciPyRealEvolver.html">SciPyRealEvolver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.TrotterQRTE.html">TrotterQRTE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.VarQITE.html">VarQITE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.VarQRTE.html">VarQRTE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.VarQTEResult.html">VarQTEResult</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../apidocs/qiskit_algorithms.time_evolvers.variational.html">Time Evolvers, Variational (<code class="xref py py-mod docutils literal notranslate"><span class="pre">qiskit_algorithms.time_evolvers.variational</span></code>)</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle navigation of Time Evolvers, Variational (qiskit_algorithms.time_evolvers.variational)</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.time_evolvers.variational.VariationalPrinciple.html">VariationalPrinciple</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.time_evolvers.variational.RealVariationalPrinciple.html">RealVariationalPrinciple</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.time_evolvers.variational.ImaginaryVariationalPrinciple.html">ImaginaryVariationalPrinciple</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.time_evolvers.variational.RealMcLachlanPrinciple.html">RealMcLachlanPrinciple</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.time_evolvers.variational.ImaginaryMcLachlanPrinciple.html">ImaginaryMcLachlanPrinciple</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stubs/qiskit_algorithms.time_evolvers.variational.ForwardEulerSolver.html">ForwardEulerSolver</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../apidocs/qiskit_algorithms.AlgorithmError.html">AlgorithmError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../stubs/qiskit_algorithms.AlgorithmJob.html">AlgorithmJob</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../apidocs/qiskit_algorithms.utils.algorithm_globals.html">utils.algorithm_globals</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Tutorials</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle navigation of Tutorials</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="01_algorithms_introduction.html">An Introduction to Algorithms using Qiskit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02_vqe_advanced_options.html">Advanced VQE Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03_vqe_simulation_with_noise.html">VQE with Qiskit Aer Primitives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="04_vqd.html">Variational Quantum Deflation (VQD) Algorithm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="05_qaoa.html">Quantum Approximate Optimization Algorithm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="06_grover.html">Grover’s Algorithm and Amplitude Amplification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="07_grover_examples.html">Grover’s algorithm examples</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Projected Variational Quantum Dynamics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="11_VarQTE.html">Variational Quantum Time Evolution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="12_gradients_framework.html">Gradient Framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="13_trotterQRTE.html">Quantum Real Time Evolution using Trotterization</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/qiskit-community/qiskit-algorithms">GitHub</a></li>
+</ul>
+
+</div></div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This page was generated from <a class="reference external" href="https://github.com/qiskit-community/qiskit-algorithms/blob/stable/0.3/docs/tutorials/10_pvqd.ipynb">docs/tutorials/10_pvqd.ipynb</a>.</p>
+</div>
+<section id="Projected-Variational-Quantum-Dynamics">
+<h1>Projected Variational Quantum Dynamics<a class="headerlink" href="#Projected-Variational-Quantum-Dynamics" title="Permalink to this heading">#</a></h1>
+<p>The projected Variational Quantum Dynamics (p-VQD) algorithm is a quantum algorithm for real time evolution. It’s a variational algorithm that projects the state at time <span class="math notranslate nohighlight">\(t + \Delta_t\)</span>, as calculated with Trotterization, onto a parameterized quantum circuit.</p>
+<p>For a quantum state <span class="math notranslate nohighlight">\(|\phi(\theta)\rangle = U(\theta)|0\rangle\)</span> constructed by a parameterized quantum circuit <span class="math notranslate nohighlight">\(U(\theta)\)</span> and a Hamiltonian <span class="math notranslate nohighlight">\(H\)</span>, the update rule can be written as</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\theta_{n+1} = \theta_n + \arg\min_{\delta\theta} 1 - |\langle\phi(\theta_n + \delta\theta)|e^{-i\Delta_t H}|\phi(\theta_n)\rangle|^2,\]</div>
+</div>
+<p>where <span class="math notranslate nohighlight">\(e^{-i\Delta_t H}\)</span> is calculated with a Trotter expansion (using e.g. the <a class="reference external" href="https://qiskit.org/documentation/stubs/qiskit.circuit.library.PauliEvolutionGate.html">PauliEvolutionGate</a> in Qiskit!).</p>
+<p>The following tutorial explores the p-VQD algorithm, which is available as the <a class="reference external" href="https://qiskit.org/ecosystem/algorithms/stubs/qiskit_algorithms.PVQD.html">PVQD</a> class. For details on the algorithm, see the original paper: <a class="reference external" href="https://quantum-journal.org/papers/q-2021-07-28-512/#">Barison et al. Quantum 5, 512 (2021)</a>.</p>
+<p>The example we’re looking at is the time evolution of the <span class="math notranslate nohighlight">\(|00\rangle\)</span> state under the Hamiltonian</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[H = 0.1 Z_1 Z_2 + X_1 + X_2,\]</div>
+</div>
+<p>which is an Ising Hamiltonian on two neighboring spins, up to a time <span class="math notranslate nohighlight">\(T=1\)</span>, where we want to keep track of the total magnetization <span class="math notranslate nohighlight">\(M = Z_1 + Z_2\)</span> as an observable.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">qiskit.quantum_info</span> <span class="kn">import</span> <span class="n">SparsePauliOp</span>
+
+<span class="n">final_time</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">hamiltonian</span> <span class="o">=</span> <span class="n">SparsePauliOp</span><span class="o">.</span><span class="n">from_sparse_list</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="p">(</span><span class="s2">&quot;ZZ&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="mf">0.1</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="p">],</span>
+    <span class="n">num_qubits</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">observable</span> <span class="o">=</span> <span class="n">SparsePauliOp</span><span class="p">([</span><span class="s2">&quot;ZI&quot;</span><span class="p">,</span> <span class="s2">&quot;IZ&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<p>After defining our Hamiltonian and observable, we need to choose the parameterized ansatz we project the update steps onto. We have different choices here, but for real time evolution an ansatz that contains building blocks of the evolved Hamiltonian usually performs very well.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">qiskit.circuit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">ParameterVector</span>
+
+<span class="n">theta</span> <span class="o">=</span> <span class="n">ParameterVector</span><span class="p">(</span><span class="s2">&quot;th&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">ansatz</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ansatz</span><span class="o">.</span><span class="n">rx</span><span class="p">(</span><span class="n">theta</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">ansatz</span><span class="o">.</span><span class="n">rx</span><span class="p">(</span><span class="n">theta</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">ansatz</span><span class="o">.</span><span class="n">rzz</span><span class="p">(</span><span class="n">theta</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">ansatz</span><span class="o">.</span><span class="n">rx</span><span class="p">(</span><span class="n">theta</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">ansatz</span><span class="o">.</span><span class="n">rx</span><span class="p">(</span><span class="n">theta</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># you can try different circuits, like:</span>
+<span class="c1"># from qiskit.circuit.library import EfficientSU2</span>
+<span class="c1"># ansatz = EfficientSU2(2, reps=1)</span>
+
+<span class="n">ansatz</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="s2">&quot;mpl&quot;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;iqx&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_10_pvqd_4_0.png" src="../_images/tutorials_10_pvqd_4_0.png" />
+</div>
+</div>
+<p>With this ansatz, the <span class="math notranslate nohighlight">\(|00\rangle\)</span> state is prepared if all parameters are 0. Hence we’ll set the initial parameters to <span class="math notranslate nohighlight">\(\theta_0 = 0\)</span>:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">initial_parameters</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">ansatz</span><span class="o">.</span><span class="n">num_parameters</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Before running the p-VQD algorithm, we need to select the backend and how we want to calculate the expectation values. Here, we’ll perform exact statevector simulations (which are still very fast, as we investigate a 2 qubit system) through the reference primitive implementations found in <code class="docutils literal notranslate"><span class="pre">qiskit.primitives</span></code>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">qiskit.primitives</span> <span class="kn">import</span> <span class="n">Sampler</span><span class="p">,</span> <span class="n">Estimator</span>
+<span class="kn">from</span> <span class="nn">qiskit_algorithms.state_fidelities</span> <span class="kn">import</span> <span class="n">ComputeUncompute</span>
+
+<span class="c1"># the fidelity is used to evaluate the objective: the overlap of the variational form and the trotter step</span>
+<span class="n">sampler</span> <span class="o">=</span> <span class="n">Sampler</span><span class="p">()</span>
+<span class="n">fidelity</span> <span class="o">=</span> <span class="n">ComputeUncompute</span><span class="p">(</span><span class="n">sampler</span><span class="p">)</span>
+
+<span class="c1"># the estimator is used to evaluate the observables</span>
+<span class="n">estimator</span> <span class="o">=</span> <span class="n">Estimator</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<p>Since p-VQD performs a classical optimization in each timestep to determine the best parameters for the projection, we also have to specify the classical optimizer. As a first example we’re using BFGS, which typically works well in statevector simulations, but later we can switch to gradient descent.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">qiskit_algorithms.optimizers</span> <span class="kn">import</span> <span class="n">L_BFGS_B</span>
+
+<span class="n">bfgs</span> <span class="o">=</span> <span class="n">L_BFGS_B</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<p>Now we can define p-VQD and execute it!</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">qiskit_algorithms</span> <span class="kn">import</span> <span class="n">PVQD</span>
+
+<span class="n">pvqd</span> <span class="o">=</span> <span class="n">PVQD</span><span class="p">(</span>
+    <span class="n">fidelity</span><span class="p">,</span> <span class="n">ansatz</span><span class="p">,</span> <span class="n">initial_parameters</span><span class="p">,</span> <span class="n">estimator</span><span class="o">=</span><span class="n">estimator</span><span class="p">,</span> <span class="n">num_timesteps</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="n">bfgs</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>The p-VQD implementation follows Qiskit’s time evolution interface, thus we pack all information of the evolution problem into an input class: the <code class="docutils literal notranslate"><span class="pre">hamiltonian</span></code> under which we evolve the state, the <code class="docutils literal notranslate"><span class="pre">final_time</span></code> of the evolution and the observables (<code class="docutils literal notranslate"><span class="pre">aux_operators</span></code>) we keep track of.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">qiskit_algorithms</span> <span class="kn">import</span> <span class="n">TimeEvolutionProblem</span>
+
+<span class="n">problem</span> <span class="o">=</span> <span class="n">TimeEvolutionProblem</span><span class="p">(</span>
+    <span class="n">hamiltonian</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">final_time</span><span class="p">,</span> <span class="n">aux_operators</span><span class="o">=</span><span class="p">[</span><span class="n">hamiltonian</span><span class="p">,</span> <span class="n">observable</span><span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>And then run the algorithm!</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">pvqd</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">problem</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{   &#39;aux_ops_evaluated&#39;: array([ 0.09853631, -0.82588395]),
+    &#39;estimated_error&#39;: 4.782399097957857e-06,
+    &#39;evolved_state&#39;: &lt;qiskit.circuit.quantumcircuit.QuantumCircuit object at 0x7f841e299460&gt;,
+    &#39;fidelities&#39;: [   1.0,
+                      0.9999999979673518,
+                      0.9999999885360136,
+                      0.9999999714172078,
+                      0.9999999466065624,
+                      0.9999999998573988,
+                      0.999999999533502,
+                      0.9999999977334382,
+                      0.9999999944817364,
+                      0.9999999898085656,
+                      0.9999999994319574,
+                      0.9999999992304272,
+                      0.999999998916081,
+                      0.9999999984852764,
+                      0.9999999979337082,
+                      0.9999999972562544,
+                      0.99999999644681,
+                      0.9999999954981172,
+                      0.9999999944015974,
+                      0.999999993147176,
+                      0.999999991723108,
+                      0.9999999901158114,
+                      0.9999999883096988,
+                      0.9999999862870146,
+                      0.9999999840276894,
+                      0.9999999815091948,
+                      0.9999999788954056,
+                      0.9999999758212996,
+                      0.9999999724040972,
+                      0.9999999686100072,
+                      0.9999999644022726,
+                      0.9999999597411264,
+                      0.9999999547455826,
+                      0.9999999490948805,
+                      0.999999942854388,
+                      0.9999999359722058,
+                      0.9999999311181972,
+                      0.9999999239343667,
+                      0.999999916116023,
+                      0.999999907611798,
+                      0.9999999005566436,
+                      0.9999998916792276,
+                      0.9999998821327684,
+                      0.9999998718671758,
+                      0.999999863270589,
+                      0.9999998526419446,
+                      0.999999841302979,
+                      0.9999998312985376,
+                      0.999999819572519,
+                      0.9999998071480096,
+                      0.9999997967324828,
+                      0.999999784275684,
+                      0.9999997711825098,
+                      0.9999997574138894,
+                      0.9999997467843054,
+                      0.9999997334023094,
+                      0.9999997194525564,
+                      0.9999999997408938,
+                      0.9999999990316448,
+                      0.9999999971971212,
+                      0.9999999943351626,
+                      0.9999999900255824,
+                      0.999999984882006,
+                      0.9999999782892758,
+                      0.9999999700223832,
+                      0.999999959871619,
+                      0.9999999476033634,
+                      0.999999932961821,
+                      0.9999999156704248,
+                      0.9999999962893344,
+                      0.9999999957921228,
+                      0.9999999947694316,
+                      0.999999993145191,
+                      0.9999999908763098,
+                      0.9999999878832544,
+                      0.9999999841577653,
+                      0.9999999797946446,
+                      0.9999999743190696,
+                      0.9999999680435702,
+                      0.9999999608412478,
+                      0.9999999975580578,
+                      0.9999999968152614,
+                      0.9999999958187596,
+                      0.9999999943079166,
+                      0.9999999925505147,
+                      0.9999999901490156,
+                      0.999999987456833,
+                      0.9999999839986122,
+                      0.9999999801813116,
+                      0.9999999754819334,
+                      0.9999999707552726,
+                      0.99999996470313,
+                      0.9999999996105948,
+                      0.9999999993438426,
+                      0.999999998815637,
+                      0.9999999979944096,
+                      0.999999996846771,
+                      0.9999999953375394,
+                      0.999999993618998,
+                      0.9999999913630085,
+                      0.9999999886416778],
+    &#39;observables&#39;: [   array([0.1, 2. ]),
+                       array([0.10008714, 1.99960002]),
+                       array([0.10034857, 1.99840031]),
+                       array([0.10078428, 1.99640162]),
+                       array([0.10139426, 1.99360515]),
+                       array([0.10137706, 1.99001224]),
+                       array([0.10128352, 1.98562405]),
+                       array([0.10111431, 1.98044233]),
+                       array([0.1008702 , 1.97446915]),
+                       array([0.10055212, 1.96770691]),
+                       array([0.10052041, 1.96015094]),
+                       array([0.10047553, 1.95181071]),
+                       array([0.10041861, 1.94268975]),
+                       array([0.10035092, 1.93279192]),
+                       array([0.10027381, 1.92212141]),
+                       array([0.10018872, 1.91068274]),
+                       array([0.10009719, 1.89848073]),
+                       array([0.10000087, 1.88552054]),
+                       array([0.09990148, 1.87180764]),
+                       array([0.09980084, 1.85734782]),
+                       array([0.09970084, 1.84214718]),
+                       array([0.09960345, 1.82621213]),
+                       array([0.09951072, 1.80954938]),
+                       array([0.09942478, 1.79216597]),
+                       array([0.09934782, 1.7740692 ]),
+                       array([0.09928208, 1.75526671]),
+                       array([0.09923122, 1.73574938]),
+                       array([0.09919639, 1.71554128]),
+                       array([0.09918001, 1.69465091]),
+                       array([0.09918454, 1.67308709]),
+                       array([0.09921252, 1.6508589 ]),
+                       array([0.09926647, 1.62797569]),
+                       array([0.09934828, 1.60442819]),
+                       array([0.09946127, 1.5802442 ]),
+                       array([0.09960805, 1.55543391]),
+                       array([0.09979128, 1.53000778]),
+                       array([0.09988077, 1.50394387]),
+                       array([0.10000534, 1.47728344]),
+                       array([0.10016773, 1.45003765]),
+                       array([0.10037066, 1.42221789]),
+                       array([0.10048107, 1.39383452]),
+                       array([0.10063122, 1.36489969]),
+                       array([0.10082386, 1.33542538]),
+                       array([0.1010617 , 1.30542382]),
+                       array([0.10122587, 1.27486884]),
+                       array([0.10143548, 1.24380952]),
+                       array([0.1016932 , 1.21225869]),
+                       array([0.10188696, 1.1802154 ]),
+                       array([0.10212936, 1.14770555]),
+                       array([0.102423  , 1.11474249]),
+                       array([0.10263095, 1.08133244]),
+                       array([0.10288944, 1.04749515]),
+                       array([0.10320093, 1.01324443]),
+                       array([0.10356783, 0.97859426]),
+                       array([0.10383007, 0.94354737]),
+                       array([0.10414601, 0.90812799]),
+                       array([0.10451789, 0.87235048]),
+                       array([0.10456283, 0.8362259 ]),
+                       array([0.10456628, 0.79977514]),
+                       array([0.10455171, 0.76300753]),
+                       array([0.10451593, 0.72593771]),
+                       array([0.10441159, 0.6885652 ]),
+                       array([0.10428606, 0.65092185]),
+                       array([0.10413594, 0.61302362]),
+                       array([0.10395549, 0.57488489]),
+                       array([0.10373903, 0.53651997]),
+                       array([0.10348079, 0.49794336]),
+                       array([0.10317489, 0.45916978]),
+                       array([0.10281533, 0.42021409]),
+                       array([0.10283314, 0.38110714]),
+                       array([0.10282799, 0.34185746]),
+                       array([0.1027986 , 0.30246364]),
+                       array([0.10274101, 0.26297202]),
+                       array([0.10265109, 0.22334929]),
+                       array([0.10252504, 0.18367927]),
+                       array([0.10236315, 0.14389634]),
+                       array([0.10218826, 0.10407545]),
+                       array([0.10196605, 0.0642389 ]),
+                       array([0.10171342, 0.02437649]),
+                       array([ 0.10142155, -0.01549257]),
+                       array([ 0.10142356, -0.05536442]),
+                       array([ 0.1013873 , -0.09521026]),
+                       array([ 0.1013343 , -0.13499527]),
+                       array([ 0.10123994, -0.17472226]),
+                       array([ 0.10112901, -0.21439262]),
+                       array([ 0.1009734 , -0.25397294]),
+                       array([ 0.10079955, -0.29342511]),
+                       array([ 0.10057748, -0.33275551]),
+                       array([ 0.10032961, -0.37197274]),
+                       array([ 0.10002998, -0.41103638]),
+                       array([ 0.09971672, -0.44990762]),
+                       array([ 0.09934775, -0.48859396]),
+                       array([ 0.09936967, -0.52707627]),
+                       array([ 0.09936926, -0.56534107]),
+                       array([ 0.09934462, -0.603373  ]),
+                       array([ 0.09929379, -0.64115676]),
+                       array([ 0.09921485, -0.67867717]),
+                       array([ 0.0991058 , -0.71591916]),
+                       array([ 0.09894982, -0.75288737]),
+                       array([ 0.09876065, -0.78954721]),
+                       array([ 0.09853631, -0.82588395])],
+    &#39;parameters&#39;: [   array([0., 0., 0., 0., 0.]),
+                      array([0.00675283, 0.00788506, 0.00868591, 0.01324725, 0.01211501]),
+                      array([0.01350567, 0.01577012, 0.01737181, 0.0264945 , 0.02423002]),
+                      array([0.0202585 , 0.02365519, 0.02605772, 0.03974175, 0.03634503]),
+                      array([0.02701134, 0.03154025, 0.03474363, 0.052989  , 0.04846003]),
+                      array([0.03151736, 0.03663367, 0.03485879, 0.06847708, 0.06335993]),
+                      array([0.03602338, 0.0417271 , 0.03497396, 0.08396515, 0.07825983]),
+                      array([0.0405294 , 0.04682052, 0.03508913, 0.09945323, 0.09315972]),
+                      array([0.04503542, 0.05191395, 0.03520429, 0.11494131, 0.10805962]),
+                      array([0.04954144, 0.05700737, 0.03531946, 0.13042938, 0.12295952]),
+                      array([0.05452344, 0.0625149 , 0.03825166, 0.14546397, 0.13746878]),
+                      array([0.05950543, 0.06802243, 0.04118385, 0.16049856, 0.15197805]),
+                      array([0.06448743, 0.07352996, 0.04411605, 0.17553315, 0.16648732]),
+                      array([0.06946943, 0.07903748, 0.04704824, 0.19056774, 0.18099658]),
+                      array([0.07445142, 0.08454501, 0.04998044, 0.20560234, 0.19550585]),
+                      array([0.07943342, 0.09005254, 0.05291263, 0.22063693, 0.21001512]),
+                      array([0.08441541, 0.09556007, 0.05584483, 0.23567152, 0.22452438]),
+                      array([0.08939741, 0.1010676 , 0.05877703, 0.25070611, 0.23903365]),
+                      array([0.0943794 , 0.10657512, 0.06170922, 0.2657407 , 0.25354292]),
+                      array([0.0993614 , 0.11208265, 0.06464142, 0.28077529, 0.26805218]),
+                      array([0.1043434 , 0.11759018, 0.06757361, 0.29580988, 0.28256145]),
+                      array([0.10932539, 0.12309771, 0.07050581, 0.31084447, 0.29707071]),
+                      array([0.11430739, 0.12860523, 0.073438  , 0.32587906, 0.31157998]),
+                      array([0.11928938, 0.13411276, 0.0763702 , 0.34091365, 0.32608925]),
+                      array([0.12427138, 0.13962029, 0.0793024 , 0.35594824, 0.34059851]),
+                      array([0.12925337, 0.14512782, 0.08223459, 0.37098283, 0.35510778]),
+                      array([0.13424625, 0.15064391, 0.08517116, 0.38602409, 0.36962534]),
+                      array([0.13923912, 0.15616   , 0.08810772, 0.40106536, 0.38414289]),
+                      array([0.14423199, 0.1616761 , 0.09104428, 0.41610662, 0.39866045]),
+                      array([0.14922486, 0.16719219, 0.09398085, 0.43114788, 0.413178  ]),
+                      array([0.15421773, 0.17270828, 0.09691741, 0.44618914, 0.42769556]),
+                      array([0.15921061, 0.17822438, 0.09985397, 0.46123041, 0.44221311]),
+                      array([0.16421344, 0.18374757, 0.1027881 , 0.47627761, 0.45673935]),
+                      array([0.16921627, 0.18927077, 0.10572223, 0.49132481, 0.47126558]),
+                      array([0.17421911, 0.19479396, 0.10865636, 0.50637201, 0.48579181]),
+                      array([0.17922194, 0.20031716, 0.11159049, 0.52141922, 0.50031804]),
+                      array([0.18429022, 0.20579068, 0.11417518, 0.53642015, 0.51491263]),
+                      array([0.1893585 , 0.2112642 , 0.11675988, 0.55142109, 0.52950722]),
+                      array([0.19442678, 0.21673772, 0.11934457, 0.56642202, 0.54410182]),
+                      array([0.19949506, 0.22221124, 0.12192927, 0.58142296, 0.55869641]),
+                      array([0.20462914, 0.22764425, 0.12418092, 0.59635244, 0.57332541]),
+                      array([0.20976322, 0.23307725, 0.12643256, 0.61128193, 0.58795442]),
+                      array([0.2148973 , 0.23851025, 0.12868421, 0.62621142, 0.60258343]),
+                      array([0.22003139, 0.24394326, 0.13093586, 0.6411409 , 0.61721244]),
+                      array([0.22526757, 0.24937977, 0.13289731, 0.65598683, 0.63185593]),
+                      array([0.23050375, 0.25481628, 0.13485876, 0.67083276, 0.64649943]),
+                      array([0.23573993, 0.26025278, 0.13682021, 0.68567869, 0.66114293]),
+                      array([0.24107198, 0.26570553, 0.13851683, 0.70043077, 0.67577162]),
+                      array([0.24640404, 0.27115828, 0.14021346, 0.71518285, 0.69040031]),
+                      array([0.25173609, 0.27661102, 0.14191008, 0.72993493, 0.705029  ]),
+                      array([0.25720771, 0.28211483, 0.14328754, 0.74454303, 0.7196015 ]),
+                      array([0.26267932, 0.28761863, 0.14466499, 0.75915113, 0.734174  ]),
+                      array([0.26815093, 0.29312243, 0.14604245, 0.77375922, 0.7487465 ]),
+                      array([0.27362255, 0.29862624, 0.1474199 , 0.78836732, 0.763319  ]),
+                      array([0.27923229, 0.30420612, 0.14845234, 0.80283274, 0.77781052]),
+                      array([0.28484203, 0.30978599, 0.14948477, 0.81729817, 0.79230204]),
+                      array([0.29045177, 0.31536587, 0.15051721, 0.8317636 , 0.80679357]),
+                      array([0.31846033, 0.34498837, 0.14169626, 0.82359645, 0.79701336]),
+                      array([0.34660156, 0.37473497, 0.13435559, 0.81532787, 0.78711788]),
+                      array([0.37483392, 0.40457102, 0.12822624, 0.8069866 , 0.77715355]),
+                      array([0.40312961, 0.43446518, 0.12307384, 0.79859693, 0.76714766]),
+                      array([0.43146995, 0.46439863, 0.1186647 , 0.79018074, 0.7571221 ]),
+                      array([0.4598416 , 0.49435721, 0.11493194, 0.78174286, 0.74708205]),
+                      array([0.48823396, 0.52432955, 0.11176838, 0.77329181, 0.73703658]),
+                      array([0.51663905, 0.55430714, 0.10908751, 0.76483463, 0.72699311]),
+                      array([0.5450505 , 0.58428323, 0.10682081, 0.75637711, 0.7169577 ]),
+                      array([0.57346286, 0.61425209, 0.10491345, 0.74792426, 0.7069356 ]),
+                      array([0.60187125, 0.64420857, 0.10332108, 0.73948067, 0.6969316 ]),
+                      array([0.630271  , 0.67414772, 0.10200761, 0.73105074, 0.68695038]),
+                      array([0.65152479, 0.69385688, 0.10177879, 0.72979654, 0.68723151]),
+                      array([0.67277106, 0.71357113, 0.10162474, 0.72854741, 0.68750547]),
+                      array([0.69401352, 0.73329358, 0.10154198, 0.7273083 , 0.68777801]),
+                      array([0.71524403, 0.75301489, 0.10152458, 0.72607199, 0.68804267]),
+                      array([0.73647452, 0.77274633, 0.10156764, 0.72485105, 0.68831331]),
+                      array([0.75768806, 0.79246927, 0.10166617, 0.72362851, 0.68857375]),
+                      array([0.7789044 , 0.81220361, 0.1018209 , 0.72242531, 0.68884584]),
+                      array([0.800098  , 0.83193186, 0.10205435, 0.72123899, 0.68911815]),
+                      array([0.82127313, 0.85165168, 0.10233261, 0.72006039, 0.6893887 ]),
+                      array([0.84242158, 0.87136364, 0.10267349, 0.71891211, 0.68967081]),
+                      array([0.86353184, 0.8910604 , 0.10306885, 0.71780379, 0.68996999]),
+                      array([0.87944936, 0.90803598, 0.10367818, 0.72190761, 0.69301144]),
+                      array([0.89536689, 0.92501155, 0.10428751, 0.72601143, 0.69605289]),
+                      array([0.9112822 , 0.9419769 , 0.1049204 , 0.73011036, 0.69909532]),
+                      array([0.92719752, 0.95894226, 0.1055533 , 0.73420929, 0.70213776]),
+                      array([0.94311752, 0.97590583, 0.10621389, 0.73831321, 0.70519296]),
+                      array([0.95903752, 0.99286941, 0.10687448, 0.74241714, 0.70824815]),
+                      array([0.9749513 , 1.00981767, 0.10756479, 0.74651909, 0.71130795]),
+                      array([0.99086508, 1.02676592, 0.10825509, 0.75062105, 0.71436775]),
+                      array([1.00678107, 1.04370941, 0.10897156, 0.75473391, 0.71744742]),
+                      array([1.02269707, 1.0606529 , 0.10968803, 0.75884677, 0.7205271 ]),
+                      array([1.03859165, 1.0775532 , 0.11044695, 0.76297317, 0.72363977]),
+                      array([1.05448624, 1.0944535 , 0.11120588, 0.76709958, 0.72675244]),
+                      array([1.06823256, 1.1074193 , 0.11203556, 0.77338444, 0.73380919]),
+                      array([1.08197887, 1.1203851 , 0.11286525, 0.77966931, 0.74086594]),
+                      array([1.09572519, 1.13335089, 0.11369494, 0.78595417, 0.74792268]),
+                      array([1.10947151, 1.14631669, 0.11452462, 0.79223904, 0.75497943]),
+                      array([1.12321783, 1.15928249, 0.11535431, 0.7985239 , 0.76203618]),
+                      array([1.13696415, 1.17224828, 0.116184  , 0.80480877, 0.76909292]),
+                      array([1.15070658, 1.18521579, 0.11699197, 0.81110449, 0.77615868]),
+                      array([1.16444902, 1.1981833 , 0.11779994, 0.81740022, 0.78322443]),
+                      array([1.17819146, 1.2111508 , 0.11860791, 0.82369594, 0.79029019])],
+    &#39;times&#39;: [   0.0,
+                 0.01,
+                 0.02,
+                 0.03,
+                 0.04,
+                 0.05,
+                 0.06,
+                 0.07,
+                 0.08,
+                 0.09,
+                 0.1,
+                 0.11,
+                 0.12,
+                 0.13,
+                 0.14,
+                 0.15,
+                 0.16,
+                 0.17,
+                 0.18,
+                 0.19,
+                 0.2,
+                 0.21,
+                 0.22,
+                 0.23,
+                 0.24,
+                 0.25,
+                 0.26,
+                 0.27,
+                 0.28,
+                 0.29,
+                 0.3,
+                 0.31,
+                 0.32,
+                 0.33,
+                 0.34,
+                 0.35000000000000003,
+                 0.36,
+                 0.37,
+                 0.38,
+                 0.39,
+                 0.4,
+                 0.41000000000000003,
+                 0.42,
+                 0.43,
+                 0.44,
+                 0.45,
+                 0.46,
+                 0.47000000000000003,
+                 0.48,
+                 0.49,
+                 0.5,
+                 0.51,
+                 0.52,
+                 0.53,
+                 0.54,
+                 0.55,
+                 0.56,
+                 0.5700000000000001,
+                 0.58,
+                 0.59,
+                 0.6,
+                 0.61,
+                 0.62,
+                 0.63,
+                 0.64,
+                 0.65,
+                 0.66,
+                 0.67,
+                 0.68,
+                 0.6900000000000001,
+                 0.7000000000000001,
+                 0.71,
+                 0.72,
+                 0.73,
+                 0.74,
+                 0.75,
+                 0.76,
+                 0.77,
+                 0.78,
+                 0.79,
+                 0.8,
+                 0.81,
+                 0.8200000000000001,
+                 0.8300000000000001,
+                 0.84,
+                 0.85,
+                 0.86,
+                 0.87,
+                 0.88,
+                 0.89,
+                 0.9,
+                 0.91,
+                 0.92,
+                 0.93,
+                 0.9400000000000001,
+                 0.9500000000000001,
+                 0.96,
+                 0.97,
+                 0.98,
+                 0.99,
+                 1.0]}
+</pre></div></div>
+</div>
+<p>Now we can have a look at the results, which are stored in a <code class="docutils literal notranslate"><span class="pre">PVQDResult</span></code> object. This class has the fields</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">evolved_state</span></code>: The quantum circuit with the parameters at the final evolution time.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">times</span></code>: The timesteps of the time integration. At these times we have the parameter values and evaluated the observables.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">parameters</span></code>: The parameter values at each timestep.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">observables</span></code>: The observable values at each timestep.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fidelities</span></code>: The fidelity of projecting the Trotter timestep onto the variational form at each timestep.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">estimated_error</span></code>: The estimated error as product of all fidelities.</p></li>
+</ul>
+<p>The energy should be constant in a real time evolution. However, we are projecting the time-evolved state onto a variational form, which might violate this rule. Ideally the energy is still more or less constant. In this evolution here we observe shifts of ~5% of the energy.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">energies</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">observables</span><span class="p">)[:,</span> <span class="mi">0</span><span class="p">]</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">times</span><span class="p">,</span> <span class="n">energies</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;royalblue&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;time $t$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;energy $E$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Energy over time&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Text(0.5, 1.0, &#39;Energy over time&#39;)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_10_pvqd_19_1.png" src="../_images/tutorials_10_pvqd_19_1.png" />
+</div>
+</div>
+<p>Since we also kept track of the total magnetization of the system, we can plot that quantity too. However let’s first compute exact reference values to verify our algorithm results.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">scipy</span> <span class="k">as</span> <span class="nn">sc</span>
+
+
+<span class="k">def</span> <span class="nf">exact</span><span class="p">(</span><span class="n">final_time</span><span class="p">,</span> <span class="n">timestep</span><span class="p">,</span> <span class="n">hamiltonian</span><span class="p">,</span> <span class="n">initial_state</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the exact values for energy and the observable.&quot;&quot;&quot;</span>
+    <span class="n">O</span> <span class="o">=</span> <span class="n">observable</span><span class="o">.</span><span class="n">to_matrix</span><span class="p">()</span>
+    <span class="n">H</span> <span class="o">=</span> <span class="n">hamiltonian</span><span class="o">.</span><span class="n">to_matrix</span><span class="p">()</span>
+
+    <span class="n">energ</span><span class="p">,</span> <span class="n">magn</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>  <span class="c1"># list of energies and magnetizations evaluated at timesteps timestep</span>
+    <span class="n">times</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># list of timepoints at which energy/obs are evaluated</span>
+    <span class="n">time</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">time</span> <span class="o">&lt;=</span> <span class="n">final_time</span><span class="p">:</span>
+        <span class="c1"># get exact state at time t</span>
+        <span class="n">exact_state</span> <span class="o">=</span> <span class="n">initial_state</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">sc</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">expm</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">time</span> <span class="o">*</span> <span class="n">H</span><span class="p">))</span>
+        <span class="c1"># store observables and time</span>
+        <span class="n">times</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
+        <span class="n">energ</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">exact_state</span><span class="o">.</span><span class="n">expectation_value</span><span class="p">(</span><span class="n">H</span><span class="p">)</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
+        <span class="n">magn</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">exact_state</span><span class="o">.</span><span class="n">expectation_value</span><span class="p">(</span><span class="n">observable</span><span class="p">)</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
+
+        <span class="c1"># next timestep</span>
+        <span class="n">time</span> <span class="o">+=</span> <span class="n">timestep</span>
+
+    <span class="k">return</span> <span class="n">times</span><span class="p">,</span> <span class="n">energ</span><span class="p">,</span> <span class="n">magn</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">qiskit.quantum_info</span> <span class="kn">import</span> <span class="n">Statevector</span>
+
+<span class="n">initial_state</span> <span class="o">=</span> <span class="n">Statevector</span><span class="p">(</span><span class="n">ansatz</span><span class="o">.</span><span class="n">assign_parameters</span><span class="p">(</span><span class="n">initial_parameters</span><span class="p">))</span>
+<span class="n">exact_times</span><span class="p">,</span> <span class="n">exact_energies</span><span class="p">,</span> <span class="n">exact_magnetizations</span> <span class="o">=</span> <span class="n">exact</span><span class="p">(</span>
+    <span class="n">final_time</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="n">hamiltonian</span><span class="p">,</span> <span class="n">initial_state</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">magnetizations</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">observables</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">]</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">times</span><span class="p">,</span> <span class="n">magnetizations</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;crimson&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;PVQD&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">exact_times</span><span class="p">,</span> <span class="n">exact_magnetizations</span><span class="p">,</span> <span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Exact&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;time $t$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;magnetization $\langle Z_1 Z_2 \rangle$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Magnetization over time&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;best&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.legend.Legend at 0x7f841dc03d30&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_10_pvqd_23_1.png" src="../_images/tutorials_10_pvqd_23_1.png" />
+</div>
+</div>
+<p>Looks pretty good!</p>
+<section id="Gradient-based-optimizations">
+<h2>Gradient-based optimizations<a class="headerlink" href="#Gradient-based-optimizations" title="Permalink to this heading">#</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">PVQD</span></code> class also implements parameter-shift gradients for the loss function and we can use a gradient descent optimization routine</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\theta_{k+1} = \theta_{k} - \eta_k \nabla\ell(\theta_k).\]</div>
+</div>
+<p>Here we’re using a learning rate of</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\eta_k = 0.1 k^{-0.602}\]</div>
+</div>
+<p>and 80 optimization steps in each timestep.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">qiskit_algorithms.optimizers</span> <span class="kn">import</span> <span class="n">GradientDescent</span>
+
+<span class="n">maxiter</span> <span class="o">=</span> <span class="mi">80</span>
+<span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">maxiter</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.602</span><span class="p">)</span>
+<span class="n">gd</span> <span class="o">=</span> <span class="n">GradientDescent</span><span class="p">(</span><span class="n">maxiter</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="nb">iter</span><span class="p">(</span><span class="n">learning_rate</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pvqd</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">gd</span>
+</pre></div>
+</div>
+</div>
+<p>The following cell would take a few minutes to run for 100 timesteps, so we reduce them here.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">pvqd</span><span class="o">.</span><span class="n">num_timesteps</span> <span class="o">=</span> <span class="n">n</span>
+<span class="n">problem</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="mf">0.1</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">result_gd</span> <span class="o">=</span> <span class="n">pvqd</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">problem</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">energies_gd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">result_gd</span><span class="o">.</span><span class="n">observables</span><span class="p">)[:,</span> <span class="mi">0</span><span class="p">]</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">times</span><span class="p">[:</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">energies</span><span class="p">[:</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;royalblue&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;BFGS&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">result_gd</span><span class="o">.</span><span class="n">times</span><span class="p">,</span> <span class="n">energies_gd</span><span class="p">,</span> <span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;royalblue&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Gradient descent&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">exact_times</span><span class="p">[:</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">exact_energies</span><span class="p">[:</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Exact&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;best&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;time $t$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;energy $E$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Energy over time&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Text(0.5, 1.0, &#39;Energy over time&#39;)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_10_pvqd_31_1.png" src="../_images/tutorials_10_pvqd_31_1.png" />
+</div>
+</div>
+<p>We can observe here, that the energy does vary quite a bit! But as we mentioned before, p-VQD does not preserve the energy.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">magnetizations_gd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">result_gd</span><span class="o">.</span><span class="n">observables</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">]</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">times</span><span class="p">[:</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">magnetizations</span><span class="p">[:</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;crimson&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;BFGS&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">result_gd</span><span class="o">.</span><span class="n">times</span><span class="p">,</span> <span class="n">magnetizations_gd</span><span class="p">,</span> <span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;crimson&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Gradient descent&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">exact_times</span><span class="p">[:</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">exact_magnetizations</span><span class="p">[:</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Exact&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;best&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;time $t$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;magnetization $\langle Z_1 + Z_2 \rangle$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Magnetization over time&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Text(0.5, 1.0, &#39;Magnetization over time&#39;)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_10_pvqd_33_1.png" src="../_images/tutorials_10_pvqd_33_1.png" />
+</div>
+</div>
+<p>The magnetization, however, is computed very precisely.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">qiskit.tools.jupyter</span>
+
+<span class="o">%</span><span class="k">qiskit_version_table</span>
+<span class="o">%</span><span class="k">qiskit_copyright</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<h3>Version Information</h3><table><tr><th>Software</th><th>Version</th></tr><tr><td><code>qiskit</code></td><td>0.45.1</td></tr><tr><td><code>qiskit_algorithms</code></td><td>0.3.0</td></tr><tr><td><code>qiskit_aer</code></td><td>0.13.1</td></tr><tr><th colspan='2'>System information</th></tr><tr><td>Python version</td><td>3.8.18</td></tr><tr><td>Python compiler</td><td>GCC 11.4.0</td></tr><tr><td>Python build</td><td>default, Aug 28 2023 08:27:22</td></tr><tr><td>OS</td><td>Linux</td></tr><tr><td>CPUs</td><td>2</td></tr><tr><td>Memory (Gb)</td><td>15.606903076171875</td></tr><tr><td colspan='2'>Tue Dec 19 18:33:57 2023 UTC</td></tr></table></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<div style='width: 100%; background-color:#d5d9e0;padding-left: 10px; padding-bottom: 10px; padding-right: 10px; padding-top: 5px'><h3>This code is a part of Qiskit</h3><p>&copy; Copyright IBM 2017, 2023.</p><p>This code is licensed under the Apache License, Version 2.0. You may<br>obtain a copy of this license in the LICENSE.txt file in the root directory<br> of this source tree or at http://www.apache.org/licenses/LICENSE-2.0.<p>Any modifications or derivative works of this code must retain this<br>copyright notice, and modified files need to carry a notice indicating<br>that they have been altered from the originals.</p></div></div>
+</div>
+<script type="application/vnd.jupyter.widget-state+json">
+{"state": {"0b69cb1138e349fca386222a85f05b0d": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": "0px 0px 10px 0px", "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "94a0963976354b2fb2d9827146b7d066": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "e88ccd2094f04d1386dbd9e41d04c403": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_0b69cb1138e349fca386222a85f05b0d", "placeholder": "\u200b", "style": "IPY_MODEL_94a0963976354b2fb2d9827146b7d066", "tabbable": null, "tooltip": null, "value": "<p style='font-family: IBM Plex Sans, Arial, Helvetica, sans-serif; font-size: 20px; font-weight: medium;'>Circuit Properties</p>"}}}, "version_major": 2, "version_minor": 0}
+</script></section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        <div class="related-pages">
+          <a class="next-page" href="11_VarQTE.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Variational Quantum Time Evolution</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="07_grover_examples.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Grover’s algorithm examples</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2017-2023, Qiskit Algorithms Development Team
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            <div class="last-updated">
+              Last updated on 2023/12/19</div>
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Projected Variational Quantum Dynamics</a><ul>
+<li><a class="reference internal" href="#Gradient-based-optimizations">Gradient-based optimizations</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/jquery.js?v=5d32c60e"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=c02300dd"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/scripts/qiskit-sphinx-theme.js?v=4d77b8ca"></script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    </body>
+</html>
