@@ -43,8 +43,6 @@ jobs:
         shell: bash
       - name: Build docs
         env:
-          encrypted_rclone_key: ${{ secrets.encrypted_rclone_key }}
-          encrypted_rclone_iv: ${{ secrets.encrypted_rclone_iv }}
           QISKIT_PARALLEL: False
           QISKIT_DOCS_BUILD_TUTORIALS: 'always'
         run: |
