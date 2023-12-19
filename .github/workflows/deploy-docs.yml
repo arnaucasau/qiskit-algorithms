@@ -57,4 +57,4 @@ jobs:
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: docs/build/html/
+          folder: docs/_build/html/
